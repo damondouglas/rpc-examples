@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_handlers/server_logging_handlers.dart';
 import 'package:rpc/rpc.dart';
@@ -13,19 +14,31 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_route/shelf_route.dart' as shelf_route;
 
-import 'package:rpc-examples/toyapi.dart';
+import 'package:rpc_examples/toyapi.dart';
 
 const _API_PREFIX = '/api';
 final ApiServer _apiServer =
     new ApiServer(apiPrefix: _API_PREFIX, prettyPrint: true);
 
-Future main() async {
+Future main(List<String> args) async {
+  var parser = new ArgParser()
+    ..addOption('port', abbr: 'p', defaultsTo: '8080');
+
+  var result = parser.parse(args);
+
+
   // Add a simple log handler to log information to a server side file.
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen(new SyncFileLoggingHandler('myLogFile.txt'));
   if (stdout.hasTerminal) {
     Logger.root.onRecord.listen(new LogPrintHandler());
   }
+
+  var logger = new Logger("shelf_sample");
+  var port = int.parse(result['port'], onError: (val) {
+    logger.severe('Could not parser port value "$val" into a number.');
+    exit(1);
+  });
 
   _apiServer.addApi(new ToyApi());
   _apiServer.enableDiscoveryApi();
@@ -39,6 +52,6 @@ Future main() async {
       .addMiddleware(shelf.logRequests())
       .addHandler(apiRouter.handler);
 
-  var server = await shelf_io.serve(handler, '0.0.0.0', 8080);
-  print('Listening at port ${server.port}.');
+  var server = await shelf_io.serve(handler, '0.0.0.0', port);
+  logger.info('Listening at port ${server.port}.');
 }

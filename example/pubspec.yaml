@@ -1,0 +1,5 @@
+name: toyapi_cli
+dependencies:
+  http: '>=0.11.3+9 <0.12.0'
+  toyapi:
+    path: ../client

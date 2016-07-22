@@ -1,4 +1,4 @@
-name: rpc-examples
+name: rpc_examples
 version: 0.1.0
 author: Dart Team <misc@dartlang.org>
 description: Examples on using the rpc package.
@@ -12,3 +12,4 @@ dependencies:
   shelf: '>=0.6.0 <0.7.0'
   shelf_route: '>=0.13.4 <0.14.0'
   shelf_rpc: '>=0.0.3 <0.0.4'
+  args: '^0.13.4+2'
