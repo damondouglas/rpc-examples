@@ -29,7 +29,7 @@ Future main(List<String> args) async {
 
   // Add a simple log handler to log information to a server side file.
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen(new SyncFileLoggingHandler('myLogFile.txt'));
+  Logger.root.onRecord.listen(new SyncFileLoggingHandler('myLogFile.log'));
   if (stdout.hasTerminal) {
     Logger.root.onRecord.listen(new LogPrintHandler());
   }
